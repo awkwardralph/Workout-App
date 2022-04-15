@@ -3,6 +3,7 @@
     <device id="retina6_0" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -11,7 +12,7 @@
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="workout_app" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ViewController" id="BYZ-38-t0r" customClass="ViewController" customModule="workout_app" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -22,14 +23,8 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Bench Press" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wJp-0x-mTJ">
-                                <rect key="frame" x="16" y="159" width="109" height="24"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="38" translatesAutoresizingMaskIntoConstraints="NO" id="n7x-gX-DIK">
-                                <rect key="frame" x="16" y="191" width="262" height="66"/>
+                                <rect key="frame" x="16" y="193.33333333333334" width="262" height="66.000000000000028"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="gSE-9U-xeC">
                                         <rect key="frame" x="0.0" y="0.0" width="62" height="66"/>
@@ -93,22 +88,79 @@
                                     <constraint firstAttribute="width" constant="262" id="QXY-C8-h1c"/>
                                 </constraints>
                             </stackView>
+                            <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Vvc-I4-rGr">
+                                <rect key="frame" x="16" y="155" width="173" height="37.666666666666657"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nep-CV-7zt">
+                                        <rect key="frame" x="0.0" y="0.0" width="64" height="37.666666666666664"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="64" id="K2I-QJ-sq4"/>
+                                        </constraints>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" title="">
+                                            <imageReference key="image" image="rectangle.and.pencil.and.ellipsis" catalog="system" symbolScale="large"/>
+                                            <preferredSymbolConfiguration key="preferredSymbolConfigurationForImage" configurationType="pointSize" pointSize="20" weight="medium"/>
+                                        </buttonConfiguration>
+                                        <connections>
+                                            <action selector="editButtonTouched:" destination="BYZ-38-t0r" eventType="touchUpInside" id="PL0-oD-kvq"/>
+                                        </connections>
+                                    </button>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Bench Press" textAlignment="natural" minimumFontSize="20" translatesAutoresizingMaskIntoConstraints="NO" id="aga-gD-xPE">
+                                        <rect key="frame" x="64" y="0.0" width="109" height="37.666666666666664"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                        <textInputTraits key="textInputTraits" returnKeyType="done"/>
+                                    </textField>
+                                </subviews>
+                            </stackView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4vp-zc-pQE">
+                                <rect key="frame" x="305" y="215" width="39" height="43.666666666666686"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="39" id="hKP-UU-oup"/>
+                                </constraints>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" image="checkmark.circle.fill" catalog="system" title="">
+                                    <preferredSymbolConfiguration key="preferredSymbolConfigurationForImage" configurationType="pointSize" pointSize="25"/>
+                                    <color key="baseForegroundColor" systemColor="systemGreenColor"/>
+                                </buttonConfiguration>
+                                <connections>
+                                    <action selector="confirmButtonTouched:" destination="BYZ-38-t0r" eventType="touchUpInside" id="RUH-Ke-zYD"/>
+                                </connections>
+                            </button>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="MC9-C4-6VZ">
+                                <rect key="frame" x="16" y="279" width="262" height="193"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="262" id="Hr3-pt-4KQ"/>
+                                    <constraint firstAttribute="height" constant="193" id="IPE-uR-i98"/>
+                                </constraints>
+                                <string key="text">Bench Press
+135 x 5 x 3</string>
+                                <color key="textColor" systemColor="labelColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="n7x-gX-DIK" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16.000000000000014" id="00D-7U-Ju5"/>
-                            <constraint firstItem="wJp-0x-mTJ" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="JBq-zd-hXF"/>
-                            <constraint firstItem="n7x-gX-DIK" firstAttribute="top" secondItem="wJp-0x-mTJ" secondAttribute="bottom" constant="8" symbolic="YES" id="O62-vK-sBS"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="nwD-CW-3Hq" secondAttribute="trailing" constant="141" id="RXu-nW-lca"/>
-                            <constraint firstItem="nwD-CW-3Hq" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="dqK-pu-JiW"/>
+                            <constraint firstItem="4vp-zc-pQE" firstAttribute="leading" secondItem="n7x-gX-DIK" secondAttribute="trailing" constant="27" id="4yo-aA-m54"/>
+                            <constraint firstItem="MC9-C4-6VZ" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="6JQ-XZ-HIV"/>
+                            <constraint firstItem="Vvc-I4-rGr" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="DfN-5E-c6P"/>
+                            <constraint firstItem="n7x-gX-DIK" firstAttribute="top" secondItem="Vvc-I4-rGr" secondAttribute="bottom" constant="0.66666666666665719" id="MiS-PR-RvJ"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="nwD-CW-3Hq" secondAttribute="trailing" constant="141" id="NyD-ct-M39"/>
+                            <constraint firstItem="4vp-zc-pQE" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="171" id="X7t-aF-rbI"/>
+                            <constraint firstItem="nwD-CW-3Hq" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="Zic-NG-2AF"/>
+                            <constraint firstItem="MC9-C4-6VZ" firstAttribute="top" secondItem="n7x-gX-DIK" secondAttribute="bottom" constant="19.666666666666629" id="iFf-gv-OxX"/>
                             <constraint firstItem="nwD-CW-3Hq" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="trG-Hd-TQx"/>
-                            <constraint firstItem="wJp-0x-mTJ" firstAttribute="top" secondItem="nwD-CW-3Hq" secondAttribute="bottom" constant="55" id="uwR-ga-gdX"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="wJp-0x-mTJ" secondAttribute="trailing" constant="265" id="vD4-GU-blb"/>
+                            <constraint firstItem="Vvc-I4-rGr" firstAttribute="top" secondItem="nwD-CW-3Hq" secondAttribute="bottom" constant="51" id="wnk-wY-wA4"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="confirmationButton" destination="4vp-zc-pQE" id="vDc-2I-avr"/>
+                        <outlet property="exerciseTextField" destination="aga-gD-xPE" id="PbG-sP-665"/>
                         <outlet property="repTextField" destination="Bsn-0j-ieG" id="adT-Uc-CTh"/>
+                        <outlet property="resultsTextView" destination="MC9-C4-6VZ" id="141-yc-ccj"/>
                         <outlet property="setTextField" destination="kaB-z5-kcM" id="279-D5-bj3"/>
                         <outlet property="weightTextField" destination="Xbx-tk-rxb" id="IK3-Fs-2fa"/>
                     </connections>
@@ -119,8 +171,16 @@
         </scene>
     </scenes>
     <resources>
+        <image name="checkmark.circle.fill" catalog="system" width="128" height="121"/>
+        <image name="rectangle.and.pencil.and.ellipsis" catalog="system" width="128" height="81"/>
+        <systemColor name="labelColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemGreenColor">
+            <color red="0.20392156862745098" green="0.7803921568627451" blue="0.34901960784313724" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
