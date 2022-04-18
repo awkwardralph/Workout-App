@@ -10,13 +10,14 @@ import SwiftUI
 
 class ViewController: UIViewController {
     var workouts: [Workout] = []
+    weak var delegate: WorkoutDelegate?
     
     @IBOutlet weak var weightTextField: UITextField!
     @IBOutlet weak var repTextField: UITextField!
     @IBOutlet weak var setTextField: UITextField!
     @IBOutlet weak var exerciseTextField: UITextField!
-    @IBOutlet weak var resultsTextView: UITextView!
     @IBOutlet weak var confirmationButton: UIButton!
+    @IBOutlet weak var inputHStack: UIStackView!
     
     let tableView = TableViewController()
     
@@ -25,12 +26,10 @@ class ViewController: UIViewController {
     }
     
     @IBAction func confirmButtonTouched(_ sender: Any) {
-        print("confirm")
         self.view.endEditing(true)
-        resultsTextView.text = ("\(exerciseTextField.text ?? "exercise")\n\(weightTextField.text!) x \(repTextField.text!) x \(setTextField.text!)")
-        let confirmedWorkout: Workout = Workout(name: exerciseTextField.text!, weight: String(weightTextField.text!), rep: Int(repTextField.text!)!, set: Int(setTextField.text ?? "") ?? 0)
-        workouts.append(confirmedWorkout)
-        print(workouts)
+        let workout: Workout = Workout(name: exerciseTextField.text!)
+        let amountDone: AmountDone = AmountDone(weight: String(weightTextField.text!), rep: Int(repTextField.text!)!, set: Int(setTextField.text ?? "") ?? 0)
+        delegate?.addWorkout(workout: workout, amountDone: amountDone)
     }
     
 
@@ -49,16 +48,13 @@ class ViewController: UIViewController {
         confirmationButton.isEnabled = false
         
         setUpToolbar()
-        print("VALIDITY:", isValid)
-        resultsTextView.layer.borderWidth = 1
-        resultsTextView.layer.cornerRadius = 6
-        resultsTextView.layer.borderColor = UIColor.gray.cgColor
         
         setUpTableView()
-    }
+        }
     
     func setUpTableView() {
         addChild(tableView)
+        self.delegate = tableView
         view.addSubview(tableView.view)
         tableView.didMove(toParent: self)
         tableView.view.translatesAutoresizingMaskIntoConstraints = false
@@ -72,7 +68,7 @@ class ViewController: UIViewController {
         constraints.append(tableView.view.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor))
         constraints.append(tableView.view.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor))
         constraints.append(tableView.view.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor))
-        constraints.append(tableView.view.topAnchor.constraint(equalTo: resultsTextView.safeAreaLayoutGuide.bottomAnchor, constant: 20))
+        constraints.append(tableView.view.topAnchor.constraint(equalTo: inputHStack.safeAreaLayoutGuide.bottomAnchor, constant: 20))
         
         // activate
         NSLayoutConstraint.activate(constraints)
@@ -154,7 +150,4 @@ extension ViewController: UITextFieldDelegate {
             confirmationButton.isEnabled = false
         }
     }
-}
-
-extension ViewController: UITextViewDelegate {
 }

@@ -6,3 +6,7 @@
 //
 
 import Foundation
+
+//final class ModelData: ObservableObject {
+//    @Published var workouts: [Workout] = [Workout(name: "Squat", weight: "135", rep: 5, set: 5)]
+//}

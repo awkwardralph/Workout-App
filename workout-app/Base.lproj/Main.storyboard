@@ -126,32 +126,17 @@
                                     <action selector="confirmButtonTouched:" destination="BYZ-38-t0r" eventType="touchUpInside" id="RUH-Ke-zYD"/>
                                 </connections>
                             </button>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="MC9-C4-6VZ">
-                                <rect key="frame" x="16" y="279" width="262" height="193"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="262" id="Hr3-pt-4KQ"/>
-                                    <constraint firstAttribute="height" constant="193" id="IPE-uR-i98"/>
-                                </constraints>
-                                <string key="text">Bench Press
-135 x 5 x 3</string>
-                                <color key="textColor" systemColor="labelColor"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                            </textView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="n7x-gX-DIK" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16.000000000000014" id="00D-7U-Ju5"/>
                             <constraint firstItem="4vp-zc-pQE" firstAttribute="leading" secondItem="n7x-gX-DIK" secondAttribute="trailing" constant="27" id="4yo-aA-m54"/>
-                            <constraint firstItem="MC9-C4-6VZ" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="6JQ-XZ-HIV"/>
                             <constraint firstItem="Vvc-I4-rGr" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="DfN-5E-c6P"/>
                             <constraint firstItem="n7x-gX-DIK" firstAttribute="top" secondItem="Vvc-I4-rGr" secondAttribute="bottom" constant="0.66666666666665719" id="MiS-PR-RvJ"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="nwD-CW-3Hq" secondAttribute="trailing" constant="141" id="NyD-ct-M39"/>
                             <constraint firstItem="4vp-zc-pQE" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="171" id="X7t-aF-rbI"/>
                             <constraint firstItem="nwD-CW-3Hq" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="Zic-NG-2AF"/>
-                            <constraint firstItem="MC9-C4-6VZ" firstAttribute="top" secondItem="n7x-gX-DIK" secondAttribute="bottom" constant="19.666666666666629" id="iFf-gv-OxX"/>
                             <constraint firstItem="nwD-CW-3Hq" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="trG-Hd-TQx"/>
                             <constraint firstItem="Vvc-I4-rGr" firstAttribute="top" secondItem="nwD-CW-3Hq" secondAttribute="bottom" constant="51" id="wnk-wY-wA4"/>
                         </constraints>
@@ -159,8 +144,8 @@
                     <connections>
                         <outlet property="confirmationButton" destination="4vp-zc-pQE" id="vDc-2I-avr"/>
                         <outlet property="exerciseTextField" destination="aga-gD-xPE" id="PbG-sP-665"/>
+                        <outlet property="inputHStack" destination="n7x-gX-DIK" id="Lhl-ma-9XN"/>
                         <outlet property="repTextField" destination="Bsn-0j-ieG" id="adT-Uc-CTh"/>
-                        <outlet property="resultsTextView" destination="MC9-C4-6VZ" id="141-yc-ccj"/>
                         <outlet property="setTextField" destination="kaB-z5-kcM" id="279-D5-bj3"/>
                         <outlet property="weightTextField" destination="Xbx-tk-rxb" id="IK3-Fs-2fa"/>
                     </connections>
@@ -173,9 +158,6 @@
     <resources>
         <image name="checkmark.circle.fill" catalog="system" width="128" height="121"/>
         <image name="rectangle.and.pencil.and.ellipsis" catalog="system" width="128" height="81"/>
-        <systemColor name="labelColor">
-            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
