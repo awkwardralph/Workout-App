@@ -18,10 +18,10 @@
 		CA381B8A2803AA2A00CA7BBA /* workout_appUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA381B892803AA2A00CA7BBA /* workout_appUITests.swift */; };
 		CA381B8C2803AA2A00CA7BBA /* workout_appUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA381B8B2803AA2A00CA7BBA /* workout_appUITestsLaunchTests.swift */; };
 		CA381B992805256900CA7BBA /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = CA381B982805256900CA7BBA /* Podfile */; };
-		CA381B9B28052DD000CA7BBA /* tableView.xib in Resources */ = {isa = PBXBuildFile; fileRef = CA381B9A28052DD000CA7BBA /* tableView.xib */; };
 		CA381BA128052FEC00CA7BBA /* TableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA381BA028052FEC00CA7BBA /* TableView.swift */; };
 		CA381BA32809F06300CA7BBA /* Workout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA381BA22809F06300CA7BBA /* Workout.swift */; };
 		CA381BA72809F41000CA7BBA /* ModelData.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA381BA62809F41000CA7BBA /* ModelData.swift */; };
+		CA381BA928124D4700CA7BBA /* LandingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA381BA828124D4700CA7BBA /* LandingViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,10 +57,10 @@
 		CA381B892803AA2A00CA7BBA /* workout_appUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = workout_appUITests.swift; sourceTree = "<group>"; };
 		CA381B8B2803AA2A00CA7BBA /* workout_appUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = workout_appUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		CA381B982805256900CA7BBA /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; };
-		CA381B9A28052DD000CA7BBA /* tableView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = tableView.xib; sourceTree = "<group>"; };
 		CA381BA028052FEC00CA7BBA /* TableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableView.swift; sourceTree = "<group>"; };
 		CA381BA22809F06300CA7BBA /* Workout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Workout.swift; sourceTree = "<group>"; };
 		CA381BA62809F41000CA7BBA /* ModelData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelData.swift; sourceTree = "<group>"; };
+		CA381BA828124D4700CA7BBA /* LandingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -116,9 +116,9 @@
 				CA381B652803AA2800CA7BBA /* AppDelegate.swift */,
 				CA381B672803AA2800CA7BBA /* SceneDelegate.swift */,
 				CA381B692803AA2800CA7BBA /* ViewController.swift */,
+				CA381BA828124D4700CA7BBA /* LandingViewController.swift */,
 				CA381BA028052FEC00CA7BBA /* TableView.swift */,
 				CA381B6B2803AA2800CA7BBA /* Main.storyboard */,
-				CA381B9A28052DD000CA7BBA /* tableView.xib */,
 				CA381B712803AA2A00CA7BBA /* Assets.xcassets */,
 				CA381B732803AA2A00CA7BBA /* LaunchScreen.storyboard */,
 				CA381B762803AA2A00CA7BBA /* Info.plist */,
@@ -261,7 +261,6 @@
 				CA381B722803AA2A00CA7BBA /* Assets.xcassets in Resources */,
 				CA381B992805256900CA7BBA /* Podfile in Resources */,
 				CA381B6D2803AA2800CA7BBA /* Main.storyboard in Resources */,
-				CA381B9B28052DD000CA7BBA /* tableView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -288,6 +287,7 @@
 			files = (
 				CA381B6A2803AA2800CA7BBA /* ViewController.swift in Sources */,
 				CA381BA128052FEC00CA7BBA /* TableView.swift in Sources */,
+				CA381BA928124D4700CA7BBA /* LandingViewController.swift in Sources */,
 				CA381B662803AA2800CA7BBA /* AppDelegate.swift in Sources */,
 				CA381B682803AA2800CA7BBA /* SceneDelegate.swift in Sources */,
 				CA381B702803AA2800CA7BBA /* workout_app.xcdatamodeld in Sources */,
@@ -475,6 +475,7 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
@@ -504,6 +505,7 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UIUserInterfaceStyle = Light;

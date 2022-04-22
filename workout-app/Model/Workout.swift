@@ -8,6 +8,11 @@
 import Foundation
 import UIKit
 
+struct Program: Hashable, Codable {
+    var workouts: [Workout]
+    var date: Date
+}
+
 struct Workout: Hashable, Codable {
     var name: String
     var amount: [AmountDone]? = []
@@ -22,3 +27,10 @@ struct AmountDone: Hashable, Codable {
     var rep: Int
     var set: Int?
 }
+
+var sampleProgram: [Program] = [
+    Program(workouts: [Workout(name: "Bench press", amount: [AmountDone(weight: "135", rep: 5, set: 5)])], date: Date()-10000),
+    Program(workouts: [Workout(name: "Bench press", amount: [AmountDone(weight: "135", rep: 5, set: 5)])], date: Date()-550000),
+    Program(workouts: [Workout(name: "Bench press", amount: [AmountDone(weight: "135", rep: 5, set: 5)])], date: Date()-40000),
+]
+

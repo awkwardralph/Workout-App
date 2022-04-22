@@ -7,9 +7,16 @@
 
 import UIKit
 import SwiftUI
+import CoreData
 
 class ViewController: UIViewController {
+    var container: NSPersistentContainer!
+    
     var workouts: [Workout] = []
+    var currentDate: Date = {
+        return Date()
+    }()
+    
     weak var delegate: WorkoutDelegate?
     
     @IBOutlet weak var weightTextField: UITextField!
@@ -18,6 +25,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var exerciseTextField: UITextField!
     @IBOutlet weak var confirmationButton: UIButton!
     @IBOutlet weak var inputHStack: UIStackView!
+    @IBOutlet weak var dateField: UILabel!
     
     let tableView = TableViewController()
     
@@ -35,6 +43,7 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        setUpDate()
         weightTextField.keyboardType = .numberPad
         repTextField.keyboardType = .numberPad
         setTextField.keyboardType = .numberPad
@@ -72,6 +81,32 @@ class ViewController: UIViewController {
         
         // activate
         NSLayoutConstraint.activate(constraints)
+    }
+    
+    func setUpDate() {
+//        let timeStamp = Date.currentTimeStamp
+//        print(timeStamp)
+//        let date2 = Date.init(timeIntervalSince1970: TimeInterval(timeStamp))
+//        print(date2)
+//        let date = Date()
+//        let calendar = Calendar.current
+//        let hour = calendar.component(.hour, from: date)
+//        let minutes = calendar.component(.minute, from: date)
+//        print(date)
+//        print(calendar)
+//        print(hour)
+//        print(minutes)
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .short
+        dateFormatter.locale = Locale(identifier: "en_US")
+//        dateFormatter.dateFormat = "yyyy-MM-dd hh:mm:ss"
+        let formattedDate = dateFormatter.string(from: currentDate)
+        // Apr 21, 2022 at 9:45 PM
+        print(formattedDate)
+        dateField.text = formattedDate
+        print(currentDate)
     }
     
     func setUpToolbar() {
@@ -112,6 +147,12 @@ class ViewController: UIViewController {
         
     }
 
+}
+
+extension Date {
+    static var currentTimeStamp: Int64{
+        return Int64(Date().timeIntervalSince1970 * 1000)
+    }
 }
 
 extension ViewController: UITextFieldDelegate {
