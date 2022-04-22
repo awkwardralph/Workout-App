@@ -12,7 +12,7 @@ import CoreData
 class ViewController: UIViewController {
     var container: NSPersistentContainer!
     
-    var workouts: [Workout] = []
+    var program: Program?
     var currentDate: Date = {
         return Date()
     }()
@@ -25,6 +25,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var exerciseTextField: UITextField!
     @IBOutlet weak var confirmationButton: UIButton!
     @IBOutlet weak var inputHStack: UIStackView!
+    @IBOutlet weak var exerciseFieldStack: UIStackView!
     @IBOutlet weak var dateField: UILabel!
     
     let tableView = TableViewController()
@@ -43,7 +44,6 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        setUpDate()
         weightTextField.keyboardType = .numberPad
         repTextField.keyboardType = .numberPad
         setTextField.keyboardType = .numberPad
@@ -59,6 +59,13 @@ class ViewController: UIViewController {
         setUpToolbar()
         
         setUpTableView()
+        
+        checkWorkoutDone()
+        setUpDate()
+        
+        
+        
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "X", style: .done, target: self, action: #selector(dismissView))
         }
     
     func setUpTableView() {
@@ -68,19 +75,29 @@ class ViewController: UIViewController {
         tableView.didMove(toParent: self)
         tableView.view.translatesAutoresizingMaskIntoConstraints = false
         var constraints = [NSLayoutConstraint]()
-        // add
-//        constraints.append(tableView.view.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor))
-//        constraints.append(tableView.view.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor))
-//        constraints.append(tableView.view.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor))
-//        constraints.append(tableView.view.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor))
-        
+        // add        
         constraints.append(tableView.view.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor))
         constraints.append(tableView.view.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor))
         constraints.append(tableView.view.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor))
-        constraints.append(tableView.view.topAnchor.constraint(equalTo: inputHStack.safeAreaLayoutGuide.bottomAnchor, constant: 20))
+        
+        if program != nil {
+            tableView.workouts = program!.workouts
+            constraints.append(tableView.view.topAnchor.constraint(equalTo: dateField.safeAreaLayoutGuide.bottomAnchor, constant: 20))
+        } else {
+            constraints.append(tableView.view.topAnchor.constraint(equalTo: inputHStack.safeAreaLayoutGuide.bottomAnchor, constant: 20))
+        }
         
         // activate
         NSLayoutConstraint.activate(constraints)
+    }
+    
+    func checkWorkoutDone() {
+        if program != nil {
+            inputHStack.isHidden = true
+            confirmationButton.isHidden = true
+            exerciseFieldStack.isHidden = true
+            currentDate = program!.date
+        }
     }
     
     func setUpDate() {
@@ -132,6 +149,10 @@ class ViewController: UIViewController {
     
     @objc func bwTapped() {
         weightTextField.text = "BW"
+    }
+    
+    @objc func dismissView() {
+        self.dismiss(animated: true)
     }
     
     @objc func doneTapped() {

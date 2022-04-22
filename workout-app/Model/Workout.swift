@@ -11,6 +11,7 @@ import UIKit
 struct Program: Hashable, Codable {
     var workouts: [Workout]
     var date: Date
+    var programDone: Bool = false
 }
 
 struct Workout: Hashable, Codable {
@@ -29,8 +30,8 @@ struct AmountDone: Hashable, Codable {
 }
 
 var sampleProgram: [Program] = [
-    Program(workouts: [Workout(name: "Bench press", amount: [AmountDone(weight: "135", rep: 5, set: 5)])], date: Date()-10000),
-    Program(workouts: [Workout(name: "Bench press", amount: [AmountDone(weight: "135", rep: 5, set: 5)])], date: Date()-550000),
-    Program(workouts: [Workout(name: "Bench press", amount: [AmountDone(weight: "135", rep: 5, set: 5)])], date: Date()-40000),
+    Program(workouts: [Workout(name: "Bench press", amount: [AmountDone(weight: "135", rep: 5, set: 5)])], date: Date()-10000, programDone: true),
+    Program(workouts: [Workout(name: "Bench press", amount: [AmountDone(weight: "135", rep: 5, set: 5)])], date: Date()-550000, programDone: true),
+    Program(workouts: [Workout(name: "Bench press", amount: [AmountDone(weight: "135", rep: 5, set: 5)])], date: Date()-40000, programDone: true),
 ]
 

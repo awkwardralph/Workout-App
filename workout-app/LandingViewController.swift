@@ -13,10 +13,22 @@ class LandingViewController: UIViewController, UITableViewDataSource, UITableVie
     
     @IBOutlet weak var startButton: UIButton!
     
+    
+    @IBAction func startButtonPressed(_ sender: Any) {
+        print("made it")
+        let vc = UIStoryboard.init(name: "Main", bundle: Bundle.main).instantiateViewController(withIdentifier: "ViewController") as? ViewController
+        let nav = UINavigationController(rootViewController: vc!)
+        
+        nav.modalPresentationStyle = .fullScreen
+        self.present(nav, animated: true)
+//        self.present(vc!, animated: true)
+//        nav.pushViewController(vc!, animated: true)
+//        self.navigationController?.pushViewController(nav, animated: true)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupDateTableView()
-        print(sampleProgram)
     }
     
     func setupDateTableView() {
@@ -41,14 +53,27 @@ class LandingViewController: UIViewController, UITableViewDataSource, UITableVie
         dateTableView.delegate = self
     }
     
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return "Workouts"
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        return sampleProgram.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = dateTableView.dequeueReusableCell(withIdentifier: "DateCell")
+        
+        // get date from object
+        let cellDate = sampleProgram[indexPath.row].date
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .short
+        dateFormatter.locale = Locale(identifier: "en_US")
+        let formattedDate = dateFormatter.string(from: cellDate)
+        
         var content = cell?.defaultContentConfiguration()
-        content?.text = "hello"
+        content?.text = formattedDate
         cell?.contentConfiguration = content
         return cell!
     }
@@ -56,7 +81,11 @@ class LandingViewController: UIViewController, UITableViewDataSource, UITableVie
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
 //        print(amountDone[indexPath.row])
-        print("hello")
+        let vc = UIStoryboard.init(name: "Main", bundle: Bundle.main).instantiateViewController(withIdentifier: "ViewController") as? ViewController
+        vc?.program = sampleProgram[indexPath.row]
+        let nav = UINavigationController(rootViewController: vc!)
+        nav.modalPresentationStyle = .fullScreen
+        self.present(nav, animated: true)
     }
     
 }

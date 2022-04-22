@@ -156,6 +156,7 @@
                     <connections>
                         <outlet property="confirmationButton" destination="4vp-zc-pQE" id="vDc-2I-avr"/>
                         <outlet property="dateField" destination="77A-zs-pMX" id="g1W-ki-fWe"/>
+                        <outlet property="exerciseFieldStack" destination="Vvc-I4-rGr" id="VUh-DO-ggh"/>
                         <outlet property="exerciseTextField" destination="aga-gD-xPE" id="PbG-sP-665"/>
                         <outlet property="inputHStack" destination="n7x-gX-DIK" id="Lhl-ma-9XN"/>
                         <outlet property="repTextField" destination="Bsn-0j-ieG" id="adT-Uc-CTh"/>
@@ -182,6 +183,9 @@
                                 </constraints>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="filled" title="Let's do it"/>
+                                <connections>
+                                    <action selector="startButtonPressed:" destination="sb0-2N-PQy" eventType="touchUpInside" id="KQF-oU-PT8"/>
+                                </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Rise and Grind 🐓" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dSV-PD-e6A">
                                 <rect key="frame" x="53" y="62" width="260.33333333333331" height="39.666666666666657"/>
