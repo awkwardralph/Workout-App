@@ -9,7 +9,16 @@ import UIKit
 import SwiftUI
 import CoreData
 
-class ViewController: UIViewController {
+protocol TopViewDelegate: AnyObject {
+    func makeFloatingButtonVisible()
+}
+
+class ViewController: UIViewController, TopViewDelegate {
+    func makeFloatingButtonVisible() {
+        floatingButton.isHidden = false
+        floatingShareButton.isHidden = false
+    }
+    
     var container: NSPersistentContainer!
     
     var program: Program?
@@ -17,7 +26,44 @@ class ViewController: UIViewController {
         return Date()
     }()
     
+    private let floatingButton: UIButton = {
+        let button = UIButton(frame: CGRect(x: 0, y: 0, width: 60, height: 60))
+        
+        button.backgroundColor = .systemMint
+        
+        let image = UIImage(systemName: "checkmark", withConfiguration: UIImage.SymbolConfiguration(pointSize: 32, weight: .medium))
+        button.setImage(image, for: .normal)
+        button.tintColor = .white
+        button.setTitleColor(.white, for: .normal)
+        button.layer.shadowRadius = 5
+        button.layer.shadowOpacity = 0.3
+        
+        // corner radius
+//        button.layer.masksToBounds = true // screws up with shadows
+        button.layer.cornerRadius = 30
+        return button
+    }()
+    
+    private let floatingShareButton: UIButton = {
+        let button = UIButton(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
+        
+        button.backgroundColor = .systemTeal
+        
+        let image = UIImage(systemName: "square.and.arrow.up", withConfiguration: UIImage.SymbolConfiguration(pointSize: 16, weight: .medium))
+        button.setImage(image, for: .normal)
+        button.tintColor = .white
+        button.setTitleColor(.white, for: .normal)
+        button.layer.shadowRadius = 3
+        button.layer.shadowOpacity = 0.3
+        
+        // corner radius
+//        button.layer.masksToBounds = true // screws up with shadows
+        button.layer.cornerRadius = 20
+        return button
+    }()
+    
     weak var delegate: WorkoutDelegate?
+    weak var landingDelegate: LandingViewDelegate?
     
     @IBOutlet weak var weightTextField: UITextField!
     @IBOutlet weak var repTextField: UITextField!
@@ -30,6 +76,52 @@ class ViewController: UIViewController {
     
     let tableView = TableViewController()
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        weightTextField.keyboardType = .numberPad
+        repTextField.keyboardType = .numberPad
+        setTextField.keyboardType = .numberPad
+        exerciseTextField.clearsOnBeginEditing = true
+        
+        weightTextField.delegate = self
+        repTextField.delegate = self
+        setTextField.delegate = self
+        exerciseTextField.delegate = self
+        
+        confirmationButton.isEnabled = false
+        
+        setUpToolbar()
+        setUpTableView()
+        
+        checkWorkoutDone()
+        setUpDate()
+        
+        view.addSubview(floatingButton)
+        view.addSubview(floatingShareButton)
+        floatingButton.addTarget(self, action: #selector(didTapFloatingButton), for: .touchUpInside)
+        floatingButton.isHidden = true
+        
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "X", style: .done, target: self, action: #selector(dismissView))
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        floatingButton.frame = CGRect(x: view.frame.size.width - 80,
+                                      y: view.frame.size.height - 120,
+                                      width: 60, height: 60)
+        print(view.frame.size.width)
+        print(view.frame.size.height)
+        if program != nil {
+            floatingShareButton.frame = CGRect(x: view.frame.size.width - 80,
+                                          y: view.frame.size.height - 100,
+                                          width: 40, height: 40)
+        } else {
+            floatingShareButton.frame = CGRect(x: view.frame.size.width - 135,
+                                               y: view.frame.size.height - 100,
+                                               width: 40, height: 40)
+        }
+    }
+    
     @IBAction func editButtonTouched(_ sender: Any) {
         exerciseTextField.becomeFirstResponder()
     }
@@ -40,34 +132,7 @@ class ViewController: UIViewController {
         let amountDone: AmountDone = AmountDone(weight: String(weightTextField.text!), rep: Int(repTextField.text!)!, set: Int(setTextField.text ?? "") ?? 0)
         delegate?.addWorkout(workout: workout, amountDone: amountDone)
     }
-    
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        weightTextField.keyboardType = .numberPad
-        repTextField.keyboardType = .numberPad
-        setTextField.keyboardType = .numberPad
-        exerciseTextField.clearsOnBeginEditing = true
-
-        weightTextField.delegate = self
-        repTextField.delegate = self
-        setTextField.delegate = self
-        exerciseTextField.delegate = self
-        
-        confirmationButton.isEnabled = false
-        
-        setUpToolbar()
-        
-        setUpTableView()
-        
-        checkWorkoutDone()
-        setUpDate()
-        
-        
-        
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "X", style: .done, target: self, action: #selector(dismissView))
-        }
-    
     func setUpTableView() {
         addChild(tableView)
         self.delegate = tableView
@@ -96,7 +161,10 @@ class ViewController: UIViewController {
             inputHStack.isHidden = true
             confirmationButton.isHidden = true
             exerciseFieldStack.isHidden = true
+            floatingButton.isHidden = true
             currentDate = program!.date
+        } else {
+            floatingShareButton.isHidden = true
         }
     }
     
@@ -165,6 +233,13 @@ class ViewController: UIViewController {
         } else if setTextField.isFirstResponder {
             self.view.endEditing(true)
         }
+    }
+    
+    @objc func didTapFloatingButton() {
+        let confirmedWorkouts = delegate?.confirmWorkouts()
+        let confirmedProgram = Program(workouts: confirmedWorkouts!, date: self.currentDate, programDone: true)
+        landingDelegate?.addProgram(confirmedProgram)
+        self.dismiss(animated: true)
         
     }
 

@@ -8,8 +8,25 @@
 import Foundation
 import UIKit
 
-class LandingViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+protocol LandingViewDelegate: AnyObject {
+    func addProgram(_ program: Program)
+}
+
+class LandingViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, LandingViewDelegate {
+    
     var dateTableView: UITableView!
+    var program: [Program] = [Program]() {
+        didSet {
+            program.sort(by: {
+                $1.date < $0.date
+            })
+            
+            DispatchQueue.main.async {
+                self.dateTableView.reloadData()
+            }
+        }
+    }
+    
     
     @IBOutlet weak var startButton: UIButton!
     
@@ -17,6 +34,7 @@ class LandingViewController: UIViewController, UITableViewDataSource, UITableVie
     @IBAction func startButtonPressed(_ sender: Any) {
         print("made it")
         let vc = UIStoryboard.init(name: "Main", bundle: Bundle.main).instantiateViewController(withIdentifier: "ViewController") as? ViewController
+        vc?.landingDelegate = self
         let nav = UINavigationController(rootViewController: vc!)
         
         nav.modalPresentationStyle = .fullScreen
@@ -29,6 +47,17 @@ class LandingViewController: UIViewController, UITableViewDataSource, UITableVie
     override func viewDidLoad() {
         super.viewDidLoad()
         setupDateTableView()
+        self.program = sampleProgram
+    }
+    
+//    override func viewDidAppear(_ animated: Bool) {
+//        print("heyyyyy")
+//        print(program)
+//    }
+    
+    func addProgram(_ program: Program) {
+        print("got here!")
+        self.program.append(program)
     }
     
     func setupDateTableView() {
@@ -58,14 +87,14 @@ class LandingViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return sampleProgram.count
+        return program.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = dateTableView.dequeueReusableCell(withIdentifier: "DateCell")
         
         // get date from object
-        let cellDate = sampleProgram[indexPath.row].date
+        let cellDate = program[indexPath.row].date
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .medium
         dateFormatter.timeStyle = .short
@@ -82,7 +111,7 @@ class LandingViewController: UIViewController, UITableViewDataSource, UITableVie
         tableView.deselectRow(at: indexPath, animated: true)
 //        print(amountDone[indexPath.row])
         let vc = UIStoryboard.init(name: "Main", bundle: Bundle.main).instantiateViewController(withIdentifier: "ViewController") as? ViewController
-        vc?.program = sampleProgram[indexPath.row]
+        vc?.program = program[indexPath.row]
         let nav = UINavigationController(rootViewController: vc!)
         nav.modalPresentationStyle = .fullScreen
         self.present(nav, animated: true)

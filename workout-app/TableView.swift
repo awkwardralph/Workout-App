@@ -9,11 +9,13 @@ import UIKit
 
 protocol WorkoutDelegate: AnyObject {
     func addWorkout(workout: Workout, amountDone: AmountDone)
+    func confirmWorkouts() -> [Workout]
 }
 
 //class TableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 class TableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, WorkoutDelegate {
     var tableView: UITableView!
+    weak var topViewDelegate: TopViewDelegate?
     var workouts: [Workout] = [] {
         didSet {
             DispatchQueue.main.async {
@@ -36,10 +38,14 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.topViewDelegate = self.parent as? TopViewDelegate
         setupTableView()
     }
     
     func addWorkout(workout: Workout, amountDone: AmountDone) {
+        if workouts.isEmpty {
+            topViewDelegate?.makeFloatingButtonVisible()
+        }
         if !workouts.contains(where: {$0.name == workout.name}) {
             workoutNames.append(workout.name)
             workouts.append(Workout(name: workout.name))
@@ -47,6 +53,10 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
         if let exercise = workouts.firstIndex(where: {$0.name == workout.name}) {
             workouts[exercise].add(runThrough: amountDone)
         }
+    }
+    
+    func confirmWorkouts() -> [Workout] {
+        return workouts
     }
     
     func setupTableView() {

@@ -31,7 +31,9 @@ struct AmountDone: Hashable, Codable {
 
 var sampleProgram: [Program] = [
     Program(workouts: [Workout(name: "Bench press", amount: [AmountDone(weight: "135", rep: 5, set: 5)])], date: Date()-10000, programDone: true),
-    Program(workouts: [Workout(name: "Bench press", amount: [AmountDone(weight: "135", rep: 5, set: 5)])], date: Date()-550000, programDone: true),
+    Program(workouts: [
+        Workout(name: "Bench press", amount: [AmountDone(weight: "135", rep: 5, set: 5)]),
+        Workout(name: "Pull ups", amount: [AmountDone(weight: "135", rep: 5, set: 5)])], date: Date()-550000, programDone: true),
     Program(workouts: [Workout(name: "Bench press", amount: [AmountDone(weight: "135", rep: 5, set: 5)])], date: Date()-40000, programDone: true),
 ]
 
