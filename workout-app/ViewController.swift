@@ -100,6 +100,7 @@ class ViewController: UIViewController, TopViewDelegate {
         view.addSubview(floatingShareButton)
         floatingButton.addTarget(self, action: #selector(didTapFloatingButton), for: .touchUpInside)
         floatingButton.isHidden = true
+        floatingShareButton.addTarget(self, action: #selector(didTapShareButton), for: .touchUpInside)
         
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "X", style: .done, target: self, action: #selector(dismissView))
     }
@@ -109,8 +110,8 @@ class ViewController: UIViewController, TopViewDelegate {
         floatingButton.frame = CGRect(x: view.frame.size.width - 80,
                                       y: view.frame.size.height - 120,
                                       width: 60, height: 60)
-        print(view.frame.size.width)
-        print(view.frame.size.height)
+        //print(view.frame.size.width)
+        //print(view.frame.size.height)
         if program != nil {
             floatingShareButton.frame = CGRect(x: view.frame.size.width - 80,
                                           y: view.frame.size.height - 100,
@@ -189,9 +190,7 @@ class ViewController: UIViewController, TopViewDelegate {
 //        dateFormatter.dateFormat = "yyyy-MM-dd hh:mm:ss"
         let formattedDate = dateFormatter.string(from: currentDate)
         // Apr 21, 2022 at 9:45 PM
-        print(formattedDate)
         dateField.text = formattedDate
-        print(currentDate)
     }
     
     func setUpToolbar() {
@@ -240,7 +239,30 @@ class ViewController: UIViewController, TopViewDelegate {
         let confirmedProgram = Program(workouts: confirmedWorkouts!, date: self.currentDate, programDone: true)
         landingDelegate?.addProgram(confirmedProgram)
         self.dismiss(animated: true)
-        
+    }
+    
+    @objc func didTapShareButton() {
+        let confirmedWorkouts = delegate?.confirmWorkouts()
+        var programString = ""
+        if program != nil {
+            programString = "On \((program?.date)!) I grinded 💪🏽:\n"
+
+        } else {
+            programString = "Check out my current grind😤:\n"
+        }
+        for exercise in confirmedWorkouts! {
+            var exerciseString = "🏋🏽\(exercise.name)"
+            for exercisesDone in exercise.amount! {
+                exerciseString += "\n‣ \(exercisesDone.weight) x \(exercisesDone.rep)"
+                if (exercisesDone.set != 0) {
+                        exerciseString += " x \(exercisesDone.set!)"
+                    }
+            }
+            programString += "\n\(exerciseString)"
+        }
+        let message = [programString]
+        let ac = UIActivityViewController(activityItems: message, applicationActivities: nil)
+        present(ac, animated: true)
     }
 
 }

@@ -7,14 +7,18 @@
 
 import Foundation
 import UIKit
+import CoreData
 
 protocol LandingViewDelegate: AnyObject {
     func addProgram(_ program: Program)
 }
 
 class LandingViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, LandingViewDelegate {
-    
     var dateTableView: UITableView!
+    
+    // 1 declare the moc
+    var managedObjectContext: NSManagedObjectContext?
+    
     var program: [Program] = [Program]() {
         didSet {
             program.sort(by: {
@@ -27,33 +31,90 @@ class LandingViewController: UIViewController, UITableViewDataSource, UITableVie
         }
     }
     
+    var programEntity: [ProgramEntity] = [] {
+        didSet {
+            programEntity.sort(by: {
+                $1.date! < $0.date!
+            })
+            
+            DispatchQueue.main.async {
+                self.dateTableView.reloadData()
+            }
+        }
+    }
     
     @IBOutlet weak var startButton: UIButton!
     
     
     @IBAction func startButtonPressed(_ sender: Any) {
-        print("made it")
-        let vc = UIStoryboard.init(name: "Main", bundle: Bundle.main).instantiateViewController(withIdentifier: "ViewController") as? ViewController
-        vc?.landingDelegate = self
-        let nav = UINavigationController(rootViewController: vc!)
-        
-        nav.modalPresentationStyle = .fullScreen
-        self.present(nav, animated: true)
-//        self.present(vc!, animated: true)
-//        nav.pushViewController(vc!, animated: true)
-//        self.navigationController?.pushViewController(nav, animated: true)
+        self.saveProgram()
+//        let vc = UIStoryboard.init(name: "Main", bundle: Bundle.main).instantiateViewController(withIdentifier: "ViewController") as? ViewController
+//        vc?.landingDelegate = self
+//        let nav = UINavigationController(rootViewController: vc!)
+//
+//        nav.modalPresentationStyle = .fullScreen
+//        self.present(nav, animated: true)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupDateTableView()
         self.program = sampleProgram
+        
+        // 2 set up the view context
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+            return
+        }
+        managedObjectContext = appDelegate.persistentContainer.viewContext
     }
     
-//    override func viewDidAppear(_ animated: Bool) {
-//        print("heyyyyy")
-//        print(program)
-//    }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.fetchCoreDate()
+    }
+    
+    func saveProgram() {
+        // 1
+        guard let managedObjectContext = managedObjectContext else {
+            fatalError("no MOC")
+        }
+        
+        let program = ProgramEntity(context: managedObjectContext)
+        program.date = Date()
+        program.programDone = true
+//        program.workouts = WorkoutE
+        
+        // 4
+        do {
+            try managedObjectContext.save()
+        } catch let error as NSError {
+            print("Could not save. \(error), \(error.userInfo)")
+        }
+        self.fetchCoreDate()
+    }
+    
+    func fetchCoreDate() {
+        // 1
+//        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+//            return
+//        }
+//
+//        let managedContext = appDelegate.persistentContainer.viewContext
+        // 1
+        guard let managedObjectContext = managedObjectContext else {
+            fatalError("no MOC")
+        }
+        
+        // 2
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "ProgramEntity")
+        
+        // 3
+        do {
+            programEntity = try managedObjectContext.fetch(fetchRequest) as! [ProgramEntity]
+        } catch let error as NSError {
+            print("Could not fetch. \(error), \(error.userInfo)")
+        }
+    }
     
     func addProgram(_ program: Program) {
         print("got here!")
@@ -87,19 +148,22 @@ class LandingViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return program.count
+//        return program.count
+        return programEntity.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = dateTableView.dequeueReusableCell(withIdentifier: "DateCell")
         
+//        print(programEntity)
         // get date from object
-        let cellDate = program[indexPath.row].date
+//        let cellDate = program[indexPath.row].date
+        let cellDate = programEntity[indexPath.row].date
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .medium
         dateFormatter.timeStyle = .short
         dateFormatter.locale = Locale(identifier: "en_US")
-        let formattedDate = dateFormatter.string(from: cellDate)
+        let formattedDate = dateFormatter.string(from: cellDate!)
         
         var content = cell?.defaultContentConfiguration()
         content?.text = formattedDate

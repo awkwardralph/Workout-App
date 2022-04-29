@@ -1,4 +1,24 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="20086" systemVersion="21D62" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
-    <elements/>
+    <entity name="AmountDoneEntity" representedClassName="AmountDoneEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="rep" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="set" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="weight" optional="YES" attributeType="String"/>
+        <relationship name="workout" maxCount="1" deletionRule="Cascade" destinationEntity="WorkoutEntity" inverseName="amountDone" inverseEntity="WorkoutEntity"/>
+    </entity>
+    <entity name="ProgramEntity" representedClassName="ProgramEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="programDone" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <relationship name="workouts" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="WorkoutEntity" inverseName="program" inverseEntity="WorkoutEntity"/>
+    </entity>
+    <entity name="WorkoutEntity" representedClassName="WorkoutEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <relationship name="amountDone" toMany="YES" deletionRule="Cascade" destinationEntity="AmountDoneEntity" inverseName="workout" inverseEntity="AmountDoneEntity"/>
+        <relationship name="program" maxCount="1" deletionRule="Cascade" destinationEntity="ProgramEntity" inverseName="workouts" inverseEntity="ProgramEntity"/>
+    </entity>
+    <elements>
+        <element name="ProgramEntity" positionX="-107.359375" positionY="-56.48828125" width="128" height="88"/>
+        <element name="WorkoutEntity" positionX="56.0859375" positionY="50.36328125" width="128" height="88"/>
+        <element name="AmountDoneEntity" positionX="-125.3984375" positionY="145.33203125" width="128" height="103"/>
+    </elements>
 </model>
