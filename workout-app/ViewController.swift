@@ -22,6 +22,7 @@ class ViewController: UIViewController, TopViewDelegate {
     var container: NSPersistentContainer!
     
     var program: Program?
+    var programEntity: ProgramEntity?
     var currentDate: Date = {
         return Date()
     }()
@@ -103,6 +104,7 @@ class ViewController: UIViewController, TopViewDelegate {
         floatingShareButton.addTarget(self, action: #selector(didTapShareButton), for: .touchUpInside)
         
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "X", style: .done, target: self, action: #selector(dismissView))
+//        print(programEntity)
     }
     
     override func viewDidLayoutSubviews() {
@@ -130,7 +132,7 @@ class ViewController: UIViewController, TopViewDelegate {
     @IBAction func confirmButtonTouched(_ sender: Any) {
         self.view.endEditing(true)
         let workout: Workout = Workout(name: exerciseTextField.text!)
-        let amountDone: AmountDone = AmountDone(weight: String(weightTextField.text!), rep: Int(repTextField.text!)!, set: Int(setTextField.text ?? "") ?? 0)
+        let amountDone: AmountDone = AmountDone(weight: String(weightTextField.text!), rep: Int(repTextField.text!)!, set: Int(setTextField.text ?? "") ?? 1)
         delegate?.addWorkout(workout: workout, amountDone: amountDone)
     }
 
@@ -146,8 +148,10 @@ class ViewController: UIViewController, TopViewDelegate {
         constraints.append(tableView.view.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor))
         constraints.append(tableView.view.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor))
         
-        if program != nil {
-            tableView.workouts = program!.workouts
+        if programEntity != nil {
+//            tableView.workouts = programEntity!.workouts
+//            print(programEntity!.workouts)
+            tableView.workoutEntity = (programEntity!.workouts?.array as? [WorkoutEntity])!
             constraints.append(tableView.view.topAnchor.constraint(equalTo: dateField.safeAreaLayoutGuide.bottomAnchor, constant: 20))
         } else {
             constraints.append(tableView.view.topAnchor.constraint(equalTo: inputHStack.safeAreaLayoutGuide.bottomAnchor, constant: 20))
@@ -158,12 +162,12 @@ class ViewController: UIViewController, TopViewDelegate {
     }
     
     func checkWorkoutDone() {
-        if program != nil {
+        if programEntity != nil {
             inputHStack.isHidden = true
             confirmationButton.isHidden = true
             exerciseFieldStack.isHidden = true
             floatingButton.isHidden = true
-            currentDate = program!.date
+            currentDate = programEntity!.date!
         } else {
             floatingShareButton.isHidden = true
         }
@@ -236,26 +240,28 @@ class ViewController: UIViewController, TopViewDelegate {
     
     @objc func didTapFloatingButton() {
         let confirmedWorkouts = delegate?.confirmWorkouts()
-        let confirmedProgram = Program(workouts: confirmedWorkouts!, date: self.currentDate, programDone: true)
-        landingDelegate?.addProgram(confirmedProgram)
+        landingDelegate?.addProgram(workouts: confirmedWorkouts!, date: self.currentDate, programDone: true)
         self.dismiss(animated: true)
     }
     
     @objc func didTapShareButton() {
         let confirmedWorkouts = delegate?.confirmWorkouts()
         var programString = ""
-        if program != nil {
-            programString = "On \((program?.date)!) I grinded 💪🏽:\n"
+        if programEntity != nil {
+            programString = "On \((programEntity?.date)!) I grinded 💪🏽:\n"
 
         } else {
             programString = "Check out my current grind😤:\n"
         }
         for exercise in confirmedWorkouts! {
-            var exerciseString = "🏋🏽\(exercise.name)"
-            for exercisesDone in exercise.amount! {
-                exerciseString += "\n‣ \(exercisesDone.weight) x \(exercisesDone.rep)"
-                if (exercisesDone.set != 0) {
-                        exerciseString += " x \(exercisesDone.set!)"
+            var exerciseString = "🏋🏽\(exercise.name!)"
+            for exercisesDone in exercise.amountDone!.array as! [AmountDoneEntity] {
+                let weight = exercisesDone.weight!
+                let rep = exercisesDone.rep
+                let set = exercisesDone.set
+                exerciseString += "\n‣ \(weight) x \(rep)"
+                if (set != 0) {
+                        exerciseString += " x \(set)"
                     }
             }
             programString += "\n\(exerciseString)"

@@ -10,7 +10,7 @@ import UIKit
 import CoreData
 
 protocol LandingViewDelegate: AnyObject {
-    func addProgram(_ program: Program)
+    func addProgram(workouts: [WorkoutEntity], date: Date, programDone: Bool)
 }
 
 class LandingViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, LandingViewDelegate {
@@ -47,19 +47,33 @@ class LandingViewController: UIViewController, UITableViewDataSource, UITableVie
     
     
     @IBAction func startButtonPressed(_ sender: Any) {
-        self.saveProgram()
-//        let vc = UIStoryboard.init(name: "Main", bundle: Bundle.main).instantiateViewController(withIdentifier: "ViewController") as? ViewController
-//        vc?.landingDelegate = self
-//        let nav = UINavigationController(rootViewController: vc!)
-//
-//        nav.modalPresentationStyle = .fullScreen
-//        self.present(nav, animated: true)
+        let vc = UIStoryboard.init(name: "Main", bundle: Bundle.main).instantiateViewController(withIdentifier: "ViewController") as? ViewController
+        vc?.landingDelegate = self
+        let nav = UINavigationController(rootViewController: vc!)
+
+        nav.modalPresentationStyle = .fullScreen
+        self.present(nav, animated: true)
     }
+    
+    func getCoreDataDBPath() {
+            let path = FileManager
+                .default
+                .urls(for: .applicationSupportDirectory, in: .userDomainMask)
+                .last?
+                .absoluteString
+                .replacingOccurrences(of: "file://", with: "")
+                .removingPercentEncoding
+
+            print("Core Data DB Path :: \(path ?? "Not found")")
+        }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupDateTableView()
         self.program = sampleProgram
+        
+        self.getCoreDataDBPath()
+        
         
         // 2 set up the view context
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
@@ -82,8 +96,38 @@ class LandingViewController: UIViewController, UITableViewDataSource, UITableVie
         let program = ProgramEntity(context: managedObjectContext)
         program.date = Date()
         program.programDone = true
-//        program.workouts = WorkoutE
         
+        let workout = WorkoutEntity(context: managedObjectContext)
+        workout.name = "Decline Bench"
+        
+        let workout2 = WorkoutEntity(context: managedObjectContext)
+        workout2.name = "Bench Press"
+        
+        let amountDone = AmountDoneEntity(context: managedObjectContext)
+        amountDone.weight = "BW"
+        amountDone.rep = 5
+        amountDone.set = 5
+        
+        let amountDone2 = AmountDoneEntity(context: managedObjectContext)
+        amountDone2.weight = "185"
+        amountDone2.rep = 5
+        amountDone2.set = 1
+        
+        let amountDone3 = AmountDoneEntity(context: managedObjectContext)
+        amountDone3.weight = "185"
+        amountDone3.rep = 5
+        amountDone3.set = 1
+        
+        let amountDone4 = AmountDoneEntity(context: managedObjectContext)
+        amountDone4.weight = "185"
+        amountDone4.rep = 5
+        amountDone4.set = 1
+        
+        workout.amountDone = [amountDone, amountDone2]
+        workout2.amountDone = [amountDone3, amountDone4]
+        program.workouts = [workout, workout2]
+        
+        print(program)
         // 4
         do {
             try managedObjectContext.save()
@@ -94,12 +138,6 @@ class LandingViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     func fetchCoreDate() {
-        // 1
-//        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
-//            return
-//        }
-//
-//        let managedContext = appDelegate.persistentContainer.viewContext
         // 1
         guard let managedObjectContext = managedObjectContext else {
             fatalError("no MOC")
@@ -116,9 +154,26 @@ class LandingViewController: UIViewController, UITableViewDataSource, UITableVie
         }
     }
     
-    func addProgram(_ program: Program) {
-        print("got here!")
-        self.program.append(program)
+    func addProgram(workouts: [WorkoutEntity], date: Date, programDone: Bool) {
+        // 1
+        guard let managedObjectContext = managedObjectContext else {
+            fatalError("no MOC")
+        }
+        
+        let program = ProgramEntity(context: managedObjectContext)
+        program.date = date
+        program.programDone = programDone
+
+        for workout in workouts {
+            program.addToWorkouts(workout)
+        }
+
+        // 4
+        do {
+            try managedObjectContext.save()
+        } catch let error as NSError {
+            print("Could not save. \(error), \(error.userInfo)")
+        }
     }
     
     func setupDateTableView() {
@@ -154,10 +209,6 @@ class LandingViewController: UIViewController, UITableViewDataSource, UITableVie
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = dateTableView.dequeueReusableCell(withIdentifier: "DateCell")
-        
-//        print(programEntity)
-        // get date from object
-//        let cellDate = program[indexPath.row].date
         let cellDate = programEntity[indexPath.row].date
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .medium
@@ -175,7 +226,9 @@ class LandingViewController: UIViewController, UITableViewDataSource, UITableVie
         tableView.deselectRow(at: indexPath, animated: true)
 //        print(amountDone[indexPath.row])
         let vc = UIStoryboard.init(name: "Main", bundle: Bundle.main).instantiateViewController(withIdentifier: "ViewController") as? ViewController
-        vc?.program = program[indexPath.row]
+//        print(programEntity[indexPath.row])
+        vc?.programEntity = programEntity[indexPath.row]
+//        vc?.program = program[indexPath.row]
         let nav = UINavigationController(rootViewController: vc!)
         nav.modalPresentationStyle = .fullScreen
         self.present(nav, animated: true)

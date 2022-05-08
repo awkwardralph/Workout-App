@@ -6,17 +6,28 @@
 //
 
 import UIKit
+import CoreData
 
 protocol WorkoutDelegate: AnyObject {
     func addWorkout(workout: Workout, amountDone: AmountDone)
-    func confirmWorkouts() -> [Workout]
+    func confirmWorkouts() -> [WorkoutEntity]
 }
 
-//class TableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 class TableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, WorkoutDelegate {
     var tableView: UITableView!
     weak var topViewDelegate: TopViewDelegate?
+    
+    // 1 declare the moc
+    var managedObjectContext: NSManagedObjectContext?
+    
     var workouts: [Workout] = [] {
+        didSet {
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
+    }
+    var workoutEntity: [WorkoutEntity] = [] {
         didSet {
             DispatchQueue.main.async {
                 self.tableView.reloadData()
@@ -26,37 +37,49 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 
     var workoutNames: [String] = []
     var amountDone:[String] = []
-//    let workoutNames = ["Bench Press", "Pull ups", "Runing", "Squat", "Deadlift", "Flips"]
-//    let amountDone = [
-//                        ["135 x 5 x 4", "135 x 5 x 5", "135 x 5 x 6", "135 x 5 x 7"],
-//                        ["135 x 5 x 7", "BW x 3 x 4"],
-//                        ["BW x 3 x 4"],
-//                        ["135 x 5 x 4", "135 x 5 x 5", "135 x 5 x 6"],
-//                        ["135 x 5 x 4"],
-//                        ["900 x 1 x 4"]
-//                    ]
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.topViewDelegate = self.parent as? TopViewDelegate
         setupTableView()
+        
+        // 2 set up the view context
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+            return
+        }
+        managedObjectContext = appDelegate.persistentContainer.viewContext
     }
     
     func addWorkout(workout: Workout, amountDone: AmountDone) {
-        if workouts.isEmpty {
+        guard let managedObjectContext = managedObjectContext else {
+            fatalError("no MOC")
+        }
+        if workoutEntity.isEmpty {
             topViewDelegate?.makeFloatingButtonVisible()
         }
-        if !workouts.contains(where: {$0.name == workout.name}) {
-            workoutNames.append(workout.name)
-            workouts.append(Workout(name: workout.name))
+        if !workoutEntity.contains(where: {$0.name == workout.name}) {
+            let workoutCore = WorkoutEntity(context: managedObjectContext)
+            workoutCore.name = workout.name
+            
+            // no program, no amount done
+            workoutEntity.append(workoutCore)
         }
-        if let exercise = workouts.firstIndex(where: {$0.name == workout.name}) {
-            workouts[exercise].add(runThrough: amountDone)
+        if let exercise = workoutEntity.firstIndex(where: {$0.name == workout.name}) {
+            
+            let AmountDoneCoreData = AmountDoneEntity(context: managedObjectContext)
+            
+            AmountDoneCoreData.weight = amountDone.weight
+            AmountDoneCoreData.rep = Int64(amountDone.rep)
+            AmountDoneCoreData.set = Int64(amountDone.set!)
+            
+            workoutEntity[exercise].addToAmountDone([AmountDoneCoreData])
+
+            self.tableView.reloadData()
         }
     }
     
-    func confirmWorkouts() -> [Workout] {
-        return workouts
+    func confirmWorkouts() -> [WorkoutEntity] {
+        return workoutEntity
     }
     
     func setupTableView() {
@@ -83,31 +106,31 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
     
     func numberOfSections(in tableView: UITableView) -> Int {
 //        return workoutNames.count
-        return workouts.count
+        return workoutEntity.count
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
 //        return workoutNames[section]
-        return workouts[section].name
+        return workoutEntity[section].name
     }
         
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 //        return amountDone[section].count
-        return workouts[section].amount!.count
+        return workoutEntity[section].amountDone!.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "WorkoutCell")! as UITableViewCell
-        let category = workouts[indexPath.section]
-        let amount = category.amount![indexPath.row]
+        let category = workoutEntity[indexPath.section].amountDone!.array as! [AmountDoneEntity]
+        let amount = category[indexPath.row]
         let weight = amount.weight
         let rep = amount.rep
         let set = amount.set
         var cellText = ""
         if (set != 0) {
-            cellText = "\(weight) x \(rep) x \(set!)"
+            cellText = "\(weight!) x \(rep) x \(set)"
         } else {
-            cellText = "\(weight) x \(rep)"
+            cellText = "\(weight!) x \(rep)"
         }
         cell.textLabel?.text = cellText
         return cell

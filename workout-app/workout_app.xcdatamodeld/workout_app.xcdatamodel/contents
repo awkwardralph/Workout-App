@@ -13,7 +13,7 @@
     </entity>
     <entity name="WorkoutEntity" representedClassName="WorkoutEntity" syncable="YES" codeGenerationType="class">
         <attribute name="name" optional="YES" attributeType="String"/>
-        <relationship name="amountDone" toMany="YES" deletionRule="Cascade" destinationEntity="AmountDoneEntity" inverseName="workout" inverseEntity="AmountDoneEntity"/>
+        <relationship name="amountDone" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="AmountDoneEntity" inverseName="workout" inverseEntity="AmountDoneEntity"/>
         <relationship name="program" maxCount="1" deletionRule="Cascade" destinationEntity="ProgramEntity" inverseName="workouts" inverseEntity="ProgramEntity"/>
     </entity>
     <elements>
